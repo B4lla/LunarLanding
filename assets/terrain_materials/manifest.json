@@ -1,0 +1,63 @@
+{
+  "phase": "F34",
+  "seed": 341018,
+  "generator": "tools/generate_surface_materials.py",
+  "license": "Original offline procedurally generated assets",
+  "tiling": "periodic",
+  "files": {
+    "pad_deck_albedo.png": {
+      "sha256": "97ecd7bec0fa0f64b53adaf3ae6c6f13edb93ae5273d7361f576cbecc5f956c3",
+      "bytes": 188668,
+      "width": 512,
+      "height": 512
+    },
+    "pad_deck_normal.png": {
+      "sha256": "a059c11c32b523f68dab326402b671201d4497378a3a9cae30032eb74c7652bc",
+      "bytes": 490650,
+      "width": 512,
+      "height": 512
+    },
+    "pad_deck_roughness.png": {
+      "sha256": "cc25d974d70e2ee502391fa93438b64d185b48c08b8cae59e6aa18e418ee4b21",
+      "bytes": 62482,
+      "width": 512,
+      "height": 512
+    },
+    "regolith_albedo.png": {
+      "sha256": "0caf18b80d6906cabfd3bc234909b28d338b574ab8a32296f2c45866738f13ca",
+      "bytes": 563149,
+      "width": 1024,
+      "height": 1024
+    },
+    "regolith_normal.png": {
+      "sha256": "05ff00961a9165e9a44cfe25c810234b0d3a5fab2df2f2e02499f7023efe7871",
+      "bytes": 1399979,
+      "width": 1024,
+      "height": 1024
+    },
+    "regolith_roughness.png": {
+      "sha256": "0cec1813483e5b69d7a9ab12e69e192aee260ad875dcf9ef72088be7becb4ac6",
+      "bytes": 171266,
+      "width": 1024,
+      "height": 1024
+    },
+    "service_deck_albedo.png": {
+      "sha256": "aa3a72a3b5beabfce6a16dc586b085a610adbbac608e8a924c5c4826d9daf7e2",
+      "bytes": 188308,
+      "width": 512,
+      "height": 512
+    },
+    "service_deck_normal.png": {
+      "sha256": "e4ffa93ecb97ff012c7d8803ce146e9a6cd185737b4ec36613d55965b55f961d",
+      "bytes": 470758,
+      "width": 512,
+      "height": 512
+    },
+    "service_deck_roughness.png": {
+      "sha256": "e85f042e0bc6be54f7fa15c3fdfacb70801975ae44bb1d2c9ba43d87ab331cea",
+      "bytes": 60759,
+      "width": 512,
+      "height": 512
+    }
+  }
+}

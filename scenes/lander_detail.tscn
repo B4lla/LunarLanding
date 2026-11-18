@@ -1,0 +1,269 @@
+[gd_scene load_steps=23 format=3]
+
+[ext_resource type="Script" path="res://scripts/lander_polish.gd" id="1_polish"]
+[ext_resource type="Script" path="res://scripts/lander_precision.gd" id="2_f20"]
+
+[sub_resource type="StandardMaterial3D" id="FoilGold"]
+albedo_color = Color(0.60, 0.38, 0.105, 1)
+metallic = 0.72
+roughness = 0.43
+
+[sub_resource type="StandardMaterial3D" id="FoilDark"]
+albedo_color = Color(0.20, 0.22, 0.23, 1)
+metallic = 0.17
+roughness = 0.76
+
+[sub_resource type="StandardMaterial3D" id="WhiteCeramic"]
+albedo_color = Color(0.78, 0.80, 0.76, 1)
+metallic = 0.1
+roughness = 0.67
+
+[sub_resource type="StandardMaterial3D" id="BlackGlass"]
+albedo_color = Color(0.014, 0.026, 0.036, 1)
+metallic = 0.17
+roughness = 0.13
+
+[sub_resource type="StandardMaterial3D" id="StrutTitanium"]
+albedo_color = Color(0.48, 0.52, 0.52, 1)
+metallic = 0.72
+roughness = 0.32
+
+[sub_resource type="StandardMaterial3D" id="PanelBlue"]
+albedo_color = Color(0.08, 0.17, 0.23, 1)
+metallic = 0.22
+roughness = 0.35
+
+[sub_resource type="StandardMaterial3D" id="Copper"]
+albedo_color = Color(0.42, 0.25, 0.14, 1)
+metallic = 0.7
+roughness = 0.36
+
+[sub_resource type="CylinderMesh" id="CabinMesh"]
+top_radius = 0.55
+bottom_radius = 0.69
+height = 0.95
+radial_segments = 8
+
+[sub_resource type="CylinderMesh" id="LowerMesh"]
+top_radius = 0.78
+bottom_radius = 0.8
+height = 0.52
+radial_segments = 8
+
+[sub_resource type="SphereMesh" id="UpperDomeMesh"]
+radius = 0.5
+height = 0.42
+radial_segments = 12
+rings = 4
+
+[sub_resource type="CylinderMesh" id="TankMesh"]
+top_radius = 0.20
+bottom_radius = 0.20
+height = 0.52
+radial_segments = 12
+
+[sub_resource type="CylinderMesh" id="FootDiscMesh"]
+top_radius = 0.38
+bottom_radius = 0.38
+height = 0.045
+radial_segments = 16
+
+[sub_resource type="CylinderMesh" id="RodMesh"]
+top_radius = 0.025
+bottom_radius = 0.025
+height = 1.0
+radial_segments = 6
+
+[sub_resource type="CylinderMesh" id="AntennaMesh"]
+top_radius = 0.01
+bottom_radius = 0.012
+height = 0.9
+radial_segments = 6
+
+[sub_resource type="BoxMesh" id="PortMesh"]
+size = Vector3(0.18, 0.20, 0.018)
+
+[sub_resource type="BoxMesh" id="RimMesh"]
+size = Vector3(0.21, 0.245, 0.025)
+
+[sub_resource type="BoxMesh" id="SunPanelMesh"]
+size = Vector3(0.64, 0.37, 0.034)
+
+[sub_resource type="BoxMesh" id="BracketMesh"]
+size = Vector3(0.055, 0.055, 0.51)
+
+[sub_resource type="BoxMesh" id="FoilBoxMesh"]
+size = Vector3(0.34, 0.37, 0.26)
+
+[sub_resource type="CylinderMesh" id="NozzleInteriorMesh"]
+top_radius = 0.14
+bottom_radius = 0.23
+height = 0.17
+radial_segments = 16
+
+[node name="LanderVisualDetail" type="Node3D"]
+script = ExtResource("1_polish")
+
+[node name="DescentFoil" type="MeshInstance3D" parent="."]
+position = Vector3(0, -0.58, 0)
+scale = Vector3(1.0, 1.0, 1.0)
+mesh = SubResource("LowerMesh")
+surface_material_override/0 = SubResource("FoilGold")
+
+[node name="UpperCabin" type="MeshInstance3D" parent="."]
+position = Vector3(0, 0.99, 0)
+mesh = SubResource("CabinMesh")
+surface_material_override/0 = SubResource("WhiteCeramic")
+
+[node name="CabinCap" type="MeshInstance3D" parent="."]
+position = Vector3(0, 1.49, 0)
+mesh = SubResource("UpperDomeMesh")
+surface_material_override/0 = SubResource("WhiteCeramic")
+
+[node name="LeftWindowBorder" type="MeshInstance3D" parent="."]
+position = Vector3(-0.22, 1.1, -0.55)
+rotation_degrees = Vector3(0, -20, 0)
+mesh = SubResource("RimMesh")
+surface_material_override/0 = SubResource("StrutTitanium")
+
+[node name="LeftWindow" type="MeshInstance3D" parent="."]
+position = Vector3(-0.22, 1.1, -0.572)
+rotation_degrees = Vector3(0, -20, 0)
+mesh = SubResource("PortMesh")
+surface_material_override/0 = SubResource("BlackGlass")
+
+[node name="RightWindowBorder" type="MeshInstance3D" parent="."]
+position = Vector3(0.22, 1.1, -0.55)
+rotation_degrees = Vector3(0, 20, 0)
+mesh = SubResource("RimMesh")
+surface_material_override/0 = SubResource("StrutTitanium")
+
+[node name="RightWindow" type="MeshInstance3D" parent="."]
+position = Vector3(0.22, 1.1, -0.572)
+rotation_degrees = Vector3(0, 20, 0)
+mesh = SubResource("PortMesh")
+surface_material_override/0 = SubResource("BlackGlass")
+
+[node name="DescentNozzleLiner" type="MeshInstance3D" parent="."]
+position = Vector3(0, -1.235, 0)
+mesh = SubResource("NozzleInteriorMesh")
+surface_material_override/0 = SubResource("FoilDark")
+
+[node name="FoilModule1" type="MeshInstance3D" parent="."]
+position = Vector3(-0.64, -0.47, -0.64)
+rotation_degrees = Vector3(0, 45, 0)
+mesh = SubResource("FoilBoxMesh")
+surface_material_override/0 = SubResource("FoilGold")
+
+[node name="FoilModule2" type="MeshInstance3D" parent="."]
+position = Vector3(0.64, -0.47, -0.64)
+rotation_degrees = Vector3(0, 45, 0)
+mesh = SubResource("FoilBoxMesh")
+surface_material_override/0 = SubResource("FoilGold")
+
+[node name="FoilModule3" type="MeshInstance3D" parent="."]
+position = Vector3(-0.64, -0.47, 0.64)
+rotation_degrees = Vector3(0, 45, 0)
+mesh = SubResource("FoilBoxMesh")
+surface_material_override/0 = SubResource("FoilGold")
+
+[node name="FoilModule4" type="MeshInstance3D" parent="."]
+position = Vector3(0.64, -0.47, 0.64)
+rotation_degrees = Vector3(0, 45, 0)
+mesh = SubResource("FoilBoxMesh")
+surface_material_override/0 = SubResource("FoilGold")
+
+[node name="AuxTankL" type="MeshInstance3D" parent="."]
+position = Vector3(-0.82, 0.53, 0.08)
+mesh = SubResource("TankMesh")
+surface_material_override/0 = SubResource("StrutTitanium")
+
+[node name="BoomL" type="MeshInstance3D" parent="."]
+position = Vector3(-1.04, 0.68, 0.06)
+mesh = SubResource("BracketMesh")
+surface_material_override/0 = SubResource("StrutTitanium")
+
+[node name="SolarPanelL" type="MeshInstance3D" parent="."]
+position = Vector3(-1.28, 0.72, 0)
+rotation_degrees = Vector3(0, 80, 0)
+mesh = SubResource("SunPanelMesh")
+surface_material_override/0 = SubResource("PanelBlue")
+
+[node name="AuxTankR" type="MeshInstance3D" parent="."]
+position = Vector3(0.82, 0.53, 0.08)
+mesh = SubResource("TankMesh")
+surface_material_override/0 = SubResource("StrutTitanium")
+
+[node name="BoomR" type="MeshInstance3D" parent="."]
+position = Vector3(1.04, 0.68, 0.06)
+mesh = SubResource("BracketMesh")
+surface_material_override/0 = SubResource("StrutTitanium")
+
+[node name="SolarPanelR" type="MeshInstance3D" parent="."]
+position = Vector3(1.28, 0.72, 0)
+rotation_degrees = Vector3(0, -80, 0)
+mesh = SubResource("SunPanelMesh")
+surface_material_override/0 = SubResource("PanelBlue")
+
+[node name="LandingFootDisc0" type="MeshInstance3D" parent="."]
+position = Vector3(-1.05, -1.516, -1.05)
+mesh = SubResource("FootDiscMesh")
+surface_material_override/0 = SubResource("StrutTitanium")
+
+[node name="LegHydraulic0" type="MeshInstance3D" parent="."]
+position = Vector3(-0.903, -0.8, -0.903)
+rotation_degrees = Vector3(-18, 0, 18)
+scale = Vector3(1, 0.6, 1)
+mesh = SubResource("RodMesh")
+surface_material_override/0 = SubResource("Copper")
+
+[node name="LandingFootDisc1" type="MeshInstance3D" parent="."]
+position = Vector3(1.05, -1.516, -1.05)
+mesh = SubResource("FootDiscMesh")
+surface_material_override/0 = SubResource("StrutTitanium")
+
+[node name="LegHydraulic1" type="MeshInstance3D" parent="."]
+position = Vector3(0.903, -0.8, -0.903)
+rotation_degrees = Vector3(-18, 0, -18)
+scale = Vector3(1, 0.6, 1)
+mesh = SubResource("RodMesh")
+surface_material_override/0 = SubResource("Copper")
+
+[node name="LandingFootDisc2" type="MeshInstance3D" parent="."]
+position = Vector3(-1.05, -1.516, 1.05)
+mesh = SubResource("FootDiscMesh")
+surface_material_override/0 = SubResource("StrutTitanium")
+
+[node name="LegHydraulic2" type="MeshInstance3D" parent="."]
+position = Vector3(-0.903, -0.8, 0.903)
+rotation_degrees = Vector3(18, 0, 18)
+scale = Vector3(1, 0.6, 1)
+mesh = SubResource("RodMesh")
+surface_material_override/0 = SubResource("Copper")
+
+[node name="LandingFootDisc3" type="MeshInstance3D" parent="."]
+position = Vector3(1.05, -1.516, 1.05)
+mesh = SubResource("FootDiscMesh")
+surface_material_override/0 = SubResource("StrutTitanium")
+
+[node name="LegHydraulic3" type="MeshInstance3D" parent="."]
+position = Vector3(0.903, -0.8, 0.903)
+rotation_degrees = Vector3(18, 0, -18)
+scale = Vector3(1, 0.6, 1)
+mesh = SubResource("RodMesh")
+surface_material_override/0 = SubResource("Copper")
+
+[node name="AntennaMast" type="MeshInstance3D" parent="."]
+position = Vector3(0.1, 2.0, 0.08)
+mesh = SubResource("AntennaMesh")
+surface_material_override/0 = SubResource("StrutTitanium")
+
+[node name="UpperAntenna" type="MeshInstance3D" parent="."]
+position = Vector3(0.1, 2.41, 0.08)
+scale = Vector3(0.42, 1, 0.42)
+mesh = SubResource("FootDiscMesh")
+surface_material_override/0 = SubResource("WhiteCeramic")
+
+; F20 passive high-detail upgrade; hidden with VisualDetail when NASA preview is active.
+[node name="PrecisionDetailsF20" type="Node3D" parent="."]
+script = ExtResource("2_f20")

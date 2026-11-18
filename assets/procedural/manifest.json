@@ -1,0 +1,54 @@
+{
+  "generator": "tools/generate_materials.py",
+  "seed_policy": "fixed integers; original algorithmic content",
+  "images": {
+    "cabin_ceramic_albedo.png": {
+      "sha256": "ab2fb2b4ef8643d332a9bda7bb792207a92ed6c9b000ee56402558ff6cfa865a",
+      "bytes": 177071
+    },
+    "cabin_ceramic_normal.png": {
+      "sha256": "a449474033e97e6ee62cc7b700e7861947358df5f5f6d886c557c55193243b43",
+      "bytes": 452077
+    },
+    "cabin_ceramic_roughness.png": {
+      "sha256": "6d742c4e955232dbe9a97c4fc62c1fbb0805d39ab20d0c7cacfb6e75a9ed0a2d",
+      "bytes": 91629
+    },
+    "deck_albedo.png": {
+      "sha256": "394a52a7cb1844b8b2ba19df1ab057de107d673fc4d19e95fdcfa35c77d7a1c1",
+      "bytes": 195375
+    },
+    "deck_normal.png": {
+      "sha256": "2942e82c8765b18f0816d8aed556ad3422b710237c241bf842544b82edaf3506",
+      "bytes": 481476
+    },
+    "deck_roughness.png": {
+      "sha256": "18f0ca6f14fb685c2b6fa5f12cf32e514e8fd7a34170f7abbdab8308897be450",
+      "bytes": 92429
+    },
+    "gold_foil_albedo.png": {
+      "sha256": "107d384352911bf3c2d8053baee497628cb54f4a5099454c27d4ad435f8efd15",
+      "bytes": 264792
+    },
+    "gold_foil_normal.png": {
+      "sha256": "a89161c5356e7207b596cd780788ce69eb7f17ee45c0c3fd6a3a3146eb89a613",
+      "bytes": 680078
+    },
+    "gold_foil_roughness.png": {
+      "sha256": "6833d137a223fbe096c26c3f4f6995a87e385ab5aeb612af173e57055308ab8b",
+      "bytes": 105821
+    },
+    "regolith_albedo.png": {
+      "sha256": "fef2b61befd434f2905aa3a96d3ca7b22fb04f68c42c2bfc15cca2e1da50c16d",
+      "bytes": 675276
+    },
+    "regolith_normal.png": {
+      "sha256": "f4761894b406a696c05eeb979605ff91374fe40b8e3eae184442db085ff07a0a",
+      "bytes": 2110762
+    },
+    "regolith_roughness.png": {
+      "sha256": "c4784900cdb79c9521e33f83728d9c7e7512a5fde23fff07565bd10026001bd7",
+      "bytes": 258116
+    }
+  }
+}

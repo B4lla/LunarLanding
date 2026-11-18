@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=65"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "rocket-landing-env"
+version = "0.3.0"
+description = "Minimal localhost client and optional Gymnasium interface for Godot Rocket Landing RL Simulator"
+requires-python = ">=3.10"
+dependencies = []
+
+[project.optional-dependencies]
+gymnasium = ["gymnasium>=1.0,<2", "numpy>=1.26"]
+training = ["gymnasium>=1.0,<2", "numpy>=1.26", "stable-baselines3>=2.0,<3"]
+test = ["pytest>=8"]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["rocket_landing_env*"]

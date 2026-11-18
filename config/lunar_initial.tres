@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="PhysicsConfig" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/physics_config.gd" id="1_physics"]
+
+[resource]
+script = ExtResource("1_physics")
+mass_kg = 1000.0
+max_thrust_newtons = 3500.0
+lunar_gravity_m_s2 = 1.62
+initial_center_altitude_m = 50.0
+initial_vertical_velocity_m_s = -5.0
+platform_top_y_m = 0.3
+rocket_half_height_m = 1.5
+throttle_change_per_second = 0.4

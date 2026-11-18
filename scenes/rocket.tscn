@@ -1,0 +1,134 @@
+[gd_scene load_steps=13 format=3]
+
+[ext_resource type="Script" path="res://scripts/rocket_physics.gd" id="1_rocket"]
+[ext_resource type="Resource" path="res://config/lunar.tres" id="2_config"]
+[ext_resource type="PackedScene" path="res://scenes/lander_detail.tscn" id="3_visual"]
+[ext_resource type="Script" path="res://scripts/nasa_visual_preview.gd" id="4_preview"]
+
+[sub_resource type="CylinderShape3D" id="CylinderCollider"]
+radius = 0.7
+height = 2.5
+
+[sub_resource type="CylinderMesh" id="RocketMesh"]
+top_radius = 0.7
+bottom_radius = 0.7
+height = 2.5
+radial_segments = 16
+
+[sub_resource type="StandardMaterial3D" id="RocketMaterial"]
+albedo_color = Color(0.86, 0.89, 0.91, 1)
+metallic = 0.3
+roughness = 0.58
+
+[sub_resource type="BoxShape3D" id="LegPadCollider"]
+size = Vector3(0.48, 0.22, 0.48)
+
+[sub_resource type="BoxMesh" id="LegPadMesh"]
+size = Vector3(0.48, 0.22, 0.48)
+
+[sub_resource type="CylinderMesh" id="LegStrutMesh"]
+top_radius = 0.06
+bottom_radius = 0.06
+height = 1.25
+radial_segments = 8
+
+[sub_resource type="CylinderMesh" id="NozzleMesh"]
+top_radius = 0.25
+bottom_radius = 0.36
+height = 0.38
+radial_segments = 12
+
+[sub_resource type="StandardMaterial3D" id="LegMaterial"]
+albedo_color = Color(0.91, 0.65, 0.23, 1)
+metallic = 0.25
+roughness = 0.72
+
+[node name="Rocket" type="RigidBody3D"]
+process_mode = 1
+can_sleep = false
+continuous_cd = true
+max_contacts_reported = 16
+contact_monitor = true
+script = ExtResource("1_rocket")
+physics_config = ExtResource("2_config")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+position = Vector3(0, 0.25, 0)
+shape = SubResource("CylinderCollider")
+
+[node name="BodyMesh" type="MeshInstance3D" parent="."]
+position = Vector3(0, 0.25, 0)
+mesh = SubResource("RocketMesh")
+surface_material_override/0 = SubResource("RocketMaterial")
+
+[node name="Nozzle" type="MeshInstance3D" parent="."]
+position = Vector3(0, -1.0, 0)
+mesh = SubResource("NozzleMesh")
+surface_material_override/0 = SubResource("LegMaterial")
+
+[node name="LegPadFL" type="CollisionShape3D" parent="."]
+position = Vector3(-1.05, -1.39, -1.05)
+shape = SubResource("LegPadCollider")
+
+[node name="LegPadFR" type="CollisionShape3D" parent="."]
+position = Vector3(1.05, -1.39, -1.05)
+shape = SubResource("LegPadCollider")
+
+[node name="LegPadBL" type="CollisionShape3D" parent="."]
+position = Vector3(-1.05, -1.39, 1.05)
+shape = SubResource("LegPadCollider")
+
+[node name="LegPadBR" type="CollisionShape3D" parent="."]
+position = Vector3(1.05, -1.39, 1.05)
+shape = SubResource("LegPadCollider")
+
+[node name="LegPadMeshFL" type="MeshInstance3D" parent="."]
+position = Vector3(-1.05, -1.39, -1.05)
+mesh = SubResource("LegPadMesh")
+surface_material_override/0 = SubResource("LegMaterial")
+
+[node name="LegPadMeshFR" type="MeshInstance3D" parent="."]
+position = Vector3(1.05, -1.39, -1.05)
+mesh = SubResource("LegPadMesh")
+surface_material_override/0 = SubResource("LegMaterial")
+
+[node name="LegPadMeshBL" type="MeshInstance3D" parent="."]
+position = Vector3(-1.05, -1.39, 1.05)
+mesh = SubResource("LegPadMesh")
+surface_material_override/0 = SubResource("LegMaterial")
+
+[node name="LegPadMeshBR" type="MeshInstance3D" parent="."]
+position = Vector3(1.05, -1.39, 1.05)
+mesh = SubResource("LegPadMesh")
+surface_material_override/0 = SubResource("LegMaterial")
+
+[node name="StrutFL" type="MeshInstance3D" parent="."]
+position = Vector3(-0.84, -0.78, -0.84)
+rotation_degrees = Vector3(-18, 0, 18)
+mesh = SubResource("LegStrutMesh")
+surface_material_override/0 = SubResource("LegMaterial")
+
+[node name="StrutFR" type="MeshInstance3D" parent="."]
+position = Vector3(0.84, -0.78, -0.84)
+rotation_degrees = Vector3(-18, 0, -18)
+mesh = SubResource("LegStrutMesh")
+surface_material_override/0 = SubResource("LegMaterial")
+
+[node name="StrutBL" type="MeshInstance3D" parent="."]
+position = Vector3(-0.84, -0.78, 0.84)
+rotation_degrees = Vector3(18, 0, 18)
+mesh = SubResource("LegStrutMesh")
+surface_material_override/0 = SubResource("LegMaterial")
+
+[node name="StrutBR" type="MeshInstance3D" parent="."]
+position = Vector3(0.84, -0.78, 0.84)
+rotation_degrees = Vector3(18, 0, -18)
+mesh = SubResource("LegStrutMesh")
+surface_material_override/0 = SubResource("LegMaterial")
+
+; F05 aesthetic-only mesh detail. All Jolt collision shapes above are unchanged.
+[node name="VisualDetail" parent="." instance=ExtResource("3_visual")]
+
+; F05 v0.6.1 opt-in external GLB preview; no new physics/collision nodes.
+[node name="NASAVisualPreview" type="Node3D" parent="."]
+script = ExtResource("4_preview")

@@ -1,0 +1,31 @@
+{
+  "generator": "tools/generate_base_materials.py",
+  "license": "Original procedurally generated artwork",
+  "seed_policy": "fixed integers / periodic lattice noise",
+  "images": {
+    "base_deck_albedo.png": {
+      "sha256": "2b729f08279190e63c2dad5ba91dc488a9262e8dfad55bb655e5d70d0deba656",
+      "bytes": 199674
+    },
+    "base_deck_normal.png": {
+      "sha256": "a697ff8092ed960b5b6c3e46d95ef7dc354a181679141f43a2371a3fbcbccc68",
+      "bytes": 351231
+    },
+    "base_deck_roughness.png": {
+      "sha256": "683a71e3c743fae9e91849779c5229dfabd63790859d1354b7cbdea9d89ab272",
+      "bytes": 62380
+    },
+    "lunar_regolith_albedo.png": {
+      "sha256": "a6d88e3bbde7ff4a26b1bc1087b1f49b44835d77f895577bca6b3c0442a39445",
+      "bytes": 720930
+    },
+    "lunar_regolith_normal.png": {
+      "sha256": "5b65f923c841f6814f84ffc685a704dc161166c1aeecbcc406b59b5e00ef2c24",
+      "bytes": 1845083
+    },
+    "lunar_regolith_roughness.png": {
+      "sha256": "f53c1a6148d85607ac6a0d6f6300b4ef07047ebe37264f3b1504778e15b536be",
+      "bytes": 183066
+    }
+  }
+}

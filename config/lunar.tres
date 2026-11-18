@@ -1,0 +1,29 @@
+[gd_resource type="Resource" script_class="PhysicsConfig" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/physics_config.gd" id="1_physics"]
+
+[resource]
+script = ExtResource("1_physics")
+mass_kg = 1000.0
+max_thrust_newtons = 3500.0
+lunar_gravity_m_s2 = 1.62
+initial_center_altitude_m = 50.0
+initial_vertical_velocity_m_s = -5.0
+platform_top_y_m = 0.3
+rocket_half_height_m = 1.5
+throttle_change_per_second = 0.4
+dry_mass_kg = 900.0
+initial_fuel_kg = 100.0
+fuel_flow_at_full_kg_s = 1.43
+max_gimbal_deg = 8.0
+max_yaw_rcs_torque_nm = 380.0
+engine_mount_y_m = -1.0
+safe_vertical_impact_m_s = 2.5
+safe_horizontal_impact_m_s = 1.2
+safe_tilt_deg = 15.0
+safe_angular_speed_rad_s = 0.4
+stable_contact_seconds = 0.8
+max_episode_seconds = 120.0
+horizontal_world_limit_m = 80.0
+maximum_altitude_m = 200.0
+spawn_spread_m = 4.0

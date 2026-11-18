@@ -1,0 +1,46 @@
+[gd_scene load_steps=8 format=3]
+
+[ext_resource type="Script" path="res://scripts/terrain_visual.gd" id="1_visual"]
+
+[sub_resource type="BoxShape3D" id="TerrainCollider"]
+size = Vector3(160, 1, 160)
+
+[sub_resource type="BoxMesh" id="TerrainMesh"]
+size = Vector3(160, 1, 160)
+
+[sub_resource type="StandardMaterial3D" id="TerrainMaterial"]
+albedo_color = Color(0.24, 0.26, 0.28, 1)
+roughness = 0.98
+
+[sub_resource type="BoxShape3D" id="PlatformCollider"]
+size = Vector3(12, 0.3, 12)
+
+[sub_resource type="BoxMesh" id="PlatformMesh"]
+size = Vector3(12, 0.3, 12)
+
+[sub_resource type="StandardMaterial3D" id="PlatformMaterial"]
+albedo_color = Color(0.35, 0.36, 0.38, 1)
+roughness = 0.92
+
+[node name="Terrain" type="Node3D"]
+script = ExtResource("1_visual")
+
+[node name="Ground" type="StaticBody3D" parent="." groups=["lunar_ground"]]
+position = Vector3(0, -0.5, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Ground"]
+shape = SubResource("TerrainCollider")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Ground"]
+mesh = SubResource("TerrainMesh")
+surface_material_override/0 = SubResource("TerrainMaterial")
+
+[node name="LandingPlatform" type="StaticBody3D" parent="." groups=["landing_platform"]]
+position = Vector3(0, 0.15, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="LandingPlatform"]
+shape = SubResource("PlatformCollider")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="LandingPlatform"]
+mesh = SubResource("PlatformMesh")
+surface_material_override/0 = SubResource("PlatformMaterial")

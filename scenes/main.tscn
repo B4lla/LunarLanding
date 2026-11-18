@@ -1,0 +1,128 @@
+[gd_scene load_steps=25 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/rocket.tscn" id="1_rocket"]
+[ext_resource type="PackedScene" path="res://scenes/terrain.tscn" id="2_terrain"]
+[ext_resource type="PackedScene" path="res://scenes/hud.tscn" id="3_hud"]
+[ext_resource type="Script" path="res://scripts/main.gd" id="4_main"]
+[ext_resource type="Script" path="res://scripts/episode_controller.gd" id="5_episode"]
+[ext_resource type="PackedScene" path="res://scenes/moon_backdrop.tscn" id="6_backdrop"]
+[ext_resource type="PackedScene" path="res://scenes/visual_fx.tscn" id="7_fx"]
+[ext_resource type="Script" path="res://scripts/observer_camera.gd" id="8_camera"]
+[ext_resource type="Script" path="res://scripts/render_probe.gd" id="9_probe"]
+[ext_resource type="Script" path="res://scripts/cinematic_camera.gd" id="10_cinematic"]
+[ext_resource type="Script" path="res://scripts/landing_pad_visual.gd" id="11_pad"]
+[ext_resource type="Script" path="res://scripts/release_entry.gd" id="12_release"]
+
+[ext_resource type="Script" path="res://scripts/flight_audio.gd" id="13_audio"]
+[ext_resource type="Script" path="res://scripts/presentation_settings.gd" id="14_preferences"]
+[ext_resource type="Script" path="res://scripts/surface_art.gd" id="15_f10_surface"]
+
+[ext_resource type="Script" path="res://scripts/resource_probe.gd" id="16_f11_probe"]
+[ext_resource type="Script" path="res://scripts/starfield.gd" id="17_stars"]
+
+[ext_resource type="Script" path="res://scripts/visual_quality.gd" id="18_f14_quality"]
+[ext_resource type="Script" path="res://scripts/vfx_showcase.gd" id="19_f22_showcase"]
+[ext_resource type="Script" path="res://scripts/base_infrastructure.gd" id="20_f30_base"]
+[ext_resource type="Script" path="res://scripts/lighting_ground_response.gd" id="21_f31_lighting"]
+[ext_resource type="Script" path="res://scripts/surface_dressing.gd" id="22_f34_surface"]
+[ext_resource type="Script" path="res://scripts/lighting_profile.gd" id="23_f36_lighting"]
+
+[sub_resource type="Environment" id="MoonEnvironment"]
+background_mode = 1
+background_color = Color(0.006, 0.008, 0.013, 1)
+ambient_light_source = 2
+ambient_light_color = Color(0.54, 0.58, 0.62, 1)
+ambient_light_energy = 0.48
+reflected_light_source = 1
+
+[node name="Main" type="Node3D"]
+process_mode = 3
+script = ExtResource("4_main")
+
+[node name="Terrain" parent="." instance=ExtResource("2_terrain")]
+
+[node name="MoonBackdrop" parent="." instance=ExtResource("6_backdrop")]
+
+[node name="F12Starfield" type="Node3D" parent="."]
+script = ExtResource("17_stars")
+
+[node name="F14VisualQuality" type="Node" parent="."]
+script = ExtResource("18_f14_quality")
+
+[node name="Rocket" parent="." instance=ExtResource("1_rocket")]
+position = Vector3(0, 50.3, 0)
+
+[node name="EpisodeController" type="Node" parent="."]
+script = ExtResource("5_episode")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("MoonEnvironment")
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+rotation_degrees = Vector3(-39, -32, 0)
+light_energy = 2.05
+light_color = Color(1, 0.98, 0.94, 1)
+shadow_enabled = true
+
+[node name="BounceLight" type="DirectionalLight3D" parent="."]
+rotation_degrees = Vector3(22, 146, 0)
+light_color = Color(0.54, 0.60, 0.72, 1)
+light_energy = 0.34
+shadow_enabled = false
+
+[node name="Camera3D" type="Camera3D" parent="."]
+position = Vector3(10, 41.5, 35.5)
+fov = 49.0
+current = true
+script = ExtResource("10_cinematic")
+
+[node name="ObserverCamera" type="Camera3D" parent="."]
+position = Vector3(8, 54, 12.5)
+fov = 48.0
+script = ExtResource("8_camera")
+
+[node name="VisualFX" parent="." instance=ExtResource("7_fx")]
+
+[node name="FlightAudio" type="Node" parent="."]
+process_mode = 3
+script = ExtResource("13_audio")
+
+[node name="PresentationSettings" type="Node" parent="."]
+process_mode = 3
+script = ExtResource("14_preferences")
+
+[node name="LandingPadVisual" type="Node3D" parent="."]
+script = ExtResource("11_pad")
+
+[node name="F10SurfaceArt" type="Node3D" parent="."]
+script = ExtResource("15_f10_surface")
+
+[node name="F30BaseInfrastructure" type="Node3D" parent="."]
+script = ExtResource("20_f30_base")
+
+[node name="F31LightingGroundResponse" type="Node3D" parent="."]
+script = ExtResource("21_f31_lighting")
+
+[node name="F34SurfaceDressing" type="Node3D" parent="."]
+script = ExtResource("22_f34_surface")
+
+[node name="F36LightingProfile" type="Node3D" parent="."]
+script = ExtResource("23_f36_lighting")
+
+[node name="HUD" parent="." instance=ExtResource("3_hud")]
+
+; F05 opt-in viewport evidence; inert unless F05_PROBE_DIR is set.
+[node name="F05RenderProbe" type="Node" parent="."]
+process_mode = 3
+script = ExtResource("9_probe")
+
+; F07 native release argument dispatcher; no effect on manual/main or remote child.
+[node name="F07ReleaseEntry" type="Node" parent="."]
+script = ExtResource("12_release")
+
+; F11 packaged-PCK checks; fully inert without explicit --rl-verify-assets.
+[node name="F11ResourceProbe" type="Node" parent="."]
+script = ExtResource("16_f11_probe")
+
+[node name="F22VisualShowcase" type="Node" parent="."]
+script = ExtResource("19_f22_showcase")

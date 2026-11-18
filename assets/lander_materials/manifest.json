@@ -1,0 +1,11 @@
+{
+  "phase": "F33",
+  "seed": 330618,
+  "size": 512,
+  "license": "Original procedural assets generated within this project",
+  "files_sha256": {
+    "bell_albedo.png": "7202ea8dc35c9d7b9a10124e483cdddc6f3f0f49d80e6a76e3c4d1b7e7fc49c5",
+    "bell_normal.png": "0f5f194cabe6a7fcbc6f04d83afdfaa68bd5120429edb768ece5385a8b376473",
+    "bell_roughness.png": "31cf8001d94d5fea13e3edaee5910aff44c58f81851740c8d90d9d4206a32199"
+  }
+}

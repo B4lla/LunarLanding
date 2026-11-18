@@ -1,0 +1,86 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/hud.gd" id="1_hud"]
+
+[sub_resource type="StyleBoxFlat" id="HUDBackground"]
+bg_color = Color(0.06, 0.085, 0.11, 0.9)
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+
+[node name="HUD" type="CanvasLayer"]
+script = ExtResource("1_hud")
+
+[node name="Panel" type="PanelContainer" parent="."]
+anchors_preset = 1
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_left = 22.0
+offset_top = 20.0
+offset_right = 414.0
+offset_bottom = 318.0
+theme_override_styles/panel = SubResource("HUDBackground")
+
+[node name="Margin" type="MarginContainer" parent="Panel"]
+theme_override_constants/margin_left = 14
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 14
+theme_override_constants/margin_bottom = 12
+
+[node name="VBox" type="VBoxContainer" parent="Panel/Margin"]
+theme_override_constants/separation = 5
+
+[node name="Title" type="Label" parent="Panel/Margin/VBox"]
+theme_override_font_sizes/font_size = 16
+text = "ROCKET LANDING  /  F05"
+
+[node name="Altitude" type="Label" parent="Panel/Margin/VBox"]
+theme_override_font_sizes/font_size = 13
+text = "ALTITUDE (CENTER):      50.00 m"
+
+[node name="VerticalSpeed" type="Label" parent="Panel/Margin/VBox"]
+theme_override_font_sizes/font_size = 13
+text = "VERTICAL SPEED:    -5.00 m/s"
+
+[node name="Horizontal" type="Label" parent="Panel/Margin/VBox"]
+theme_override_font_sizes/font_size = 13
+text = "POSITION: X 0 m | Z 0 m"
+
+[node name="Attitude" type="Label" parent="Panel/Margin/VBox"]
+theme_override_font_sizes/font_size = 13
+text = "TILT: 0°"
+
+[node name="Throttle" type="Label" parent="Panel/Margin/VBox"]
+theme_override_font_sizes/font_size = 13
+text = "MAIN ENGINE:           0 %"
+
+[node name="ThrottleBar" type="ProgressBar" parent="Panel/Margin/VBox"]
+custom_minimum_size = Vector2(0, 8)
+max_value = 100.0
+show_percentage = false
+
+[node name="Fuel" type="Label" parent="Panel/Margin/VBox"]
+theme_override_font_sizes/font_size = 13
+text = "FUEL: 100 kg"
+
+[node name="FuelBar" type="ProgressBar" parent="Panel/Margin/VBox"]
+custom_minimum_size = Vector2(0, 8)
+max_value = 100.0
+value = 100.0
+show_percentage = false
+
+[node name="Status" type="Label" parent="Panel/Margin/VBox"]
+theme_override_font_sizes/font_size = 13
+text = "EPISODE: IN FLIGHT"
+
+[node name="Mode" type="Label" parent="Panel/Margin/VBox"]
+theme_override_font_sizes/font_size = 13
+text = "MODE: MANUAL | FIXED CAMERA"
+
+[node name="Controls" type="Label" parent="Panel/Margin/VBox"]
+theme_override_font_sizes/font_size = 13
+text = "↑↓ throttle · WASD/QE attitude · 0/1 engine\nR reset · N randomize · P pause · C/V camera · T PID"
+autowrap_mode = 3
