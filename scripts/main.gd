@@ -74,7 +74,7 @@ func _process(_delta: float) -> void:
     _hud_update_elapsed += maxf(_delta, 0.0)
     if _hud_update_elapsed >= 0.1:
         _hud_update_elapsed = fmod(_hud_update_elapsed, 0.1)
-        hud.call("set_telemetry", rocket, episode, get_tree().paused,
+        hud.call("set_telemetry", rocket, episode, get_tree().paused and not remote_hosted,
             use_reference_pid, camera_follow)
     if remote_hosted and get_parent().get_script() == null:
         $HUD/Panel/Margin/VBox/Mode.text = "ERROR: TCP BRIDGE NOT LOADED; check debugger"

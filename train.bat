@@ -14,6 +14,10 @@ where godot.exe >nul 2>&1
 if not errorlevel 1 goto train
 where godot4.exe >nul 2>&1
 if not errorlevel 1 goto train
+if exist "%~dp0Godot_v4.7.2-stable_win64_console.exe" (
+    set "GODOT_EXE=%~dp0Godot_v4.7.2-stable_win64_console.exe"
+    goto train
+)
 set /p "GODOT_EXE=Full path to Godot 4.7.2 (without quotes): "
 if not defined GODOT_EXE (
     echo ERROR: A path to Godot is required.

@@ -23,7 +23,7 @@ class RocketLandingEnv(gym.Env):
     """Gymnasium Env wrapper, with optional Godot process lifecycle management.
 
     Launch Godot with a remote scene but do not pass an external trainer path.
-    Uses real physics and pauses Godot between requests. No accelerated mode.
+    Uses real physics and pauses Godot between requests.
     """
 
     metadata = {"render_modes": ["human"], "render_fps": 60}
@@ -50,7 +50,7 @@ class RocketLandingEnv(gym.Env):
                  project_path: str | os.PathLike[str] | None = None,
                  headless: bool = False, host: str = "127.0.0.1",
                  port: int = 55423, timeout: float = 10.0,
-                 random_start: bool = False):
+                 random_start: bool = False, unpaced: bool = False):
         super().__init__()
         # Validate before spawning anything; a busy port must not allow an
         # accidentally owned adapter to connect to an unrelated old Godot.
@@ -62,6 +62,8 @@ class RocketLandingEnv(gym.Env):
             raise ValueError('timeout must be in (0, 300] seconds')
         if type(random_start) is not bool or type(headless) is not bool:
             raise ValueError('random_start and headless must be booleans')
+        if type(unpaced) is not bool or (unpaced and (not headless or godot_executable is None)):
+            raise ValueError('unpaced requires a locally launched, headless Godot')
         self.render_mode = None if headless else "human"
         self._random_start = random_start
         self._needs_reset = True
@@ -80,6 +82,11 @@ class RocketLandingEnv(gym.Env):
             executable = Path(godot_executable).expanduser().resolve()
             if not executable.is_file():
                 raise FileNotFoundError(f'Godot executable must be a file: {executable}')
+            if os.name == "nt" and executable.name.lower().endswith("_console.exe"):
+                # Own the engine directly so close() also releases its listener.
+                native = executable.with_name(executable.name[:-len("_console.exe")] + ".exe")
+                if native.is_file():
+                    executable = native
             # bind(), unlike connect(), does not briefly take the single
             # client slot of an already-running remote.tscn bridge.
             with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as probe:
@@ -98,6 +105,10 @@ class RocketLandingEnv(gym.Env):
             args = [str(executable)]
             if headless:
                 args.append("--headless")
+            if unpaced:
+                # Advance each frame by one simulated tick without waiting
+                # for the wall clock. The bridge still authorizes every step.
+                args.extend(["--fixed-fps", "60"])
             args += ["--path", str(project), "res://scenes/remote.tscn", "--", f"--rl-port={port}"]
             try:
                 self._process = subprocess.Popen(args, stdout=logfile, stderr=subprocess.STDOUT)

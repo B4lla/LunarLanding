@@ -28,9 +28,11 @@ The reward combines a small cost on every step with penalties for horizontal dis
 | Out of bounds | `-50` |
 | Time limit | `-20` |
 
-The weights are defined in `config/reward.tres` and applied in `scripts/rl_bridge.gd`. Fuel is part of the observation, but the current reward formula does not include a separate fuel-consumption penalty. The default training script uses a fixed starting configuration (`random_start=False`), a learning rate of `0.0003`, and a replay buffer of `100,000` transitions.
+The weights are defined in `config/reward.tres` and applied in `scripts/rl_bridge.gd`. Each action advances one 60 Hz physics tick.
 
-Training produces a model from experience; a safe landing is **not guaranteed** after a particular number of steps. The default script starts a new model each time rather than resuming the saved one. Evaluate a trained agent separately before drawing conclusions about its performance.
+Each run starts with landing demonstrations recorded in Godot. The neural network first learns to imitate their throttle and steering actions. SAC then collects experience from randomized starts and trains on the replay buffer. An imitation loss keeps the actor close to demonstrated corrections while it learns from its own flights. The saved network takes the same 15 observations and produces the same three actions when used with `SAC.load()` and `predict()`.
+
+The trainer evaluates the initial network, every 5,000 SAC steps, and at the end of the run. Each evaluation uses deterministic actions on one nominal start and four fixed randomized starts. It saves the checkpoint with the most successful landings, using mean reward to break ties.
 
 ## Requirements
 
@@ -55,15 +57,18 @@ Pass arguments to the launcher from Command Prompt or PowerShell:
 
 ```powershell
 .\train.bat --godot "C:\path\to\Godot.exe" --steps 100000
-.\train.bat --godot "C:\path\to\Godot.exe" --steps 10000 --visual
+.\train.bat --steps 10000 --output python/user_algorithms/candidate.zip
 .\train.bat --help
 ```
 
 - `--godot`: path to the executable. Alternatively, set `GODOT_EXE` or add `godot.exe` or `godot4.exe` to PATH.
-- `--steps`: positive number of training steps.
+- `--steps`: positive number of SAC steps after collecting and learning from demonstrations.
 - `--visual`: show the simulation; without it Godot runs headless.
+- `--output`: save the model to a different path, preserving an existing model.
+- `--seed`: seed for training, defaulting to `42`.
+- `--port`: local Godot port, defaulting to `55423`. Use another port if it is occupied.
 
-Training uses **SAC**, starts Godot, and connects to `127.0.0.1:55423`. The port must be available. When training completes, the model is saved to `python/user_algorithms/sac_rocket.zip`; a later run overwrites it. Generated models are excluded from Git.
+Headless training runs without wall-clock synchronization. Godot still advances one physics tick per action. The default model path is `python/user_algorithms/sac_rocket.zip`. A later run using the same path replaces the previous model. Generated models are excluded from Git.
 
 ### Manual installation
 
