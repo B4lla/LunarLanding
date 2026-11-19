@@ -1,6 +1,6 @@
 """Generate successful flight demonstrations and warm-start the SAC actor."""
 from configparser import ConfigParser
-from math import atan2
+from math import atan2, hypot, sqrt
 
 import numpy as np
 import torch
@@ -26,9 +26,13 @@ class LandingReference:
 
         pitch = atan2(2 * (qw * qx + qy * qz), 1 - 2 * (qx * qx + qz * qz))
         roll = atan2(2 * (qw * qz + qx * qy), 1 - 2 * (qx * qx + qz * qz))
-        target_pitch = np.clip((-0.17 * z - 0.62 * vz) / self.gravity, -0.14, 0.14)
-        target_roll = np.clip((0.17 * x + 0.62 * vx) / self.gravity, -0.14, 0.14)
-        descent_speed = -np.clip((y - self.half_height) * 0.22, 0.8, 5.0)
+        target_pitch = np.clip((-0.17 * z - 0.62 * vz) / self.gravity, -0.22, 0.22)
+        target_roll = np.clip((0.17 * x + 0.62 * vx) / self.gravity, -0.22, 0.22)
+        clearance = max(0.0, y - self.half_height)
+        # Give lateral corrections more time when the pad is far away.
+        distance = hypot(x, z)
+        cruise_speed = max(3.0, 6.0 - 0.35 * max(0.0, distance - 4.0))
+        descent_speed = -min(cruise_speed, sqrt(1.1**2 + 2.0 * 0.6 * clearance))
         throttle = info["mass_kg"] * (self.gravity + 1.8 * (descent_speed - vy)) / self.max_thrust
         return np.array([
             np.clip(throttle, 0.12, 1.0),
@@ -92,7 +96,7 @@ def warm_start(model, env, reference, seed):
     rng = np.random.default_rng(seed)
     examples = []
     optimizer = torch.optim.Adam(model.actor.parameters(), lr=1e-3)
-    for count, actor_fraction, updates in [(16, 0.0, 3500), (8, 0.45, 2000), (8, 0.7, 2000)]:
+    for count, actor_fraction, updates in [(24, 0.0, 4000), (12, 0.45, 2500), (12, 0.7, 2500)]:
         # Later demonstrations add reference corrections on states resulting
         # from the actor's own small errors.
         collect_examples(model, env, reference, rng, examples, count, actor_fraction)

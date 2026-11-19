@@ -12,7 +12,11 @@ PROJECT = Path(__file__).resolve().parent
 def main():
     parser = argparse.ArgumentParser(description="Prueba el modelo SAC entrenado.")
     parser.add_argument("--episodios", type=int, default=5)
-    parser.add_argument("--aleatorio", action="store_true", help="Usa posiciones iniciales aleatorias")
+    start = parser.add_mutually_exclusive_group()
+    start.add_argument("--aleatorio", dest="aleatorio", action="store_true", default=True,
+                       help="Usa posiciones iniciales aleatorias (predeterminado)")
+    start.add_argument("--nominal", dest="aleatorio", action="store_false",
+                       help="Empieza centrado a la altura nominal")
     parser.add_argument("--sin-ventana", action="store_true", help="Ejecuta sin mostrar la simulacion")
     parser.add_argument("--modelo", type=Path, default=PROJECT / "python/user_algorithms/sac_rocket.zip",
                         help="Ruta del modelo SAC")
@@ -52,6 +56,7 @@ def main():
                     successes += landed
                     distance = f", distancia al centro: {hypot(obs[0], obs[2]):.2f} m" if landed else ""
                     print(f"Intento {episode}: {result} ({info.get('reason', '')}); "
+                          f"tiempo simulado: {info['elapsed_s']:.2f} s, "
                           f"recompensa: {total:.1f}{distance}", flush=True)
                     break
         print(f"Aterrizajes correctos: {successes}/{args.episodios}", flush=True)

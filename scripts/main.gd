@@ -31,6 +31,8 @@ func _ready() -> void:
         episode.process_mode = Node.PROCESS_MODE_PAUSABLE
         get_tree().paused = true
         $HUD/Panel/Margin/VBox/Title.text = "ROCKET LANDING / REMOTE"
+    else:
+        reset_simulation(true)
     camera.look_at(Vector3(0.0, 25.0, 0.0), Vector3.UP)
     var configured_gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
     if not is_equal_approx(configured_gravity, PHYSICS_CONFIG.lunar_gravity_m_s2):
@@ -85,7 +87,7 @@ func _unhandled_key_input(event: InputEvent) -> void:
         return
     match event.keycode:
         KEY_R:
-            reset_simulation()
+            reset_simulation(not event.shift_pressed)
             get_viewport().set_input_as_handled()
         KEY_P:
             toggle_pause()
@@ -119,7 +121,7 @@ func reset_simulation(random_start: bool = false) -> void:
     use_reference_pid = false
     _pid.reset()
     _keyboard_attitude_active = false
-    episode.reset_episode(episode.episode_seed + 1 if random_start else 12345, random_start)
+    episode.reset_episode(randi_range(0, 2147483647) if random_start else 12345, random_start)
 
 
 func toggle_pause() -> void:

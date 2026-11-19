@@ -82,6 +82,7 @@ def parse_args(argv=None):
 
 def evaluate(model, env, landed_result):
     landing_distances = []
+    landing_times = []
     returns = []
     # Compare every checkpoint on identical starts outside the demo seeds.
     starts = [(0, False), *((seed, True) for seed in range(101, 113))]
@@ -95,6 +96,7 @@ def evaluate(model, env, landed_result):
             if terminated or truncated:
                 if info["result"] == landed_result:
                     landing_distances.append(hypot(obs[0], obs[2]))
+                    landing_times.append(info["elapsed_s"])
                 returns.append(total)
                 break
     mean_return = sum(returns) / len(returns)
@@ -102,7 +104,8 @@ def evaluate(model, env, landed_result):
     mean_distance = sum(landing_distances) / landings if landings else float("inf")
     distance_summary = ""
     if landings:
-        distance_summary = f", mean distance from pad center {mean_distance:.2f} m"
+        mean_time = sum(landing_times) / landings
+        distance_summary = f", mean landing time {mean_time:.2f} s, mean distance from pad center {mean_distance:.2f} m"
     print(f"Evaluation at {model.num_timesteps:,} SAC steps: "
           f"{landings}/{len(returns)} landings, mean return {mean_return:.2f}{distance_summary}",
           flush=True)

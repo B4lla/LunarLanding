@@ -82,16 +82,16 @@ def verify_pause(client: RocketLandingClient, idle_seconds: float, write: Callab
 def verify_spawn(client: RocketLandingClient, write: Callable[[str], None]) -> None:
     nominal, _ = client.reset(seed=101, random_start=False)
     _near(nominal[:3], [0.0, 50.0, 0.0], "Nominal spawn")
-    starts = [client.reset(seed=seed, random_start=True)[0] for seed in (101, 102, 103, 104)]
+    starts = [client.reset(seed=seed, random_start=True)[0] for seed in range(101, 113)]
     repeated, _ = client.reset(seed=101, random_start=True)
     _near(starts[0], repeated, "Repeated seed")
-    for axis, label in enumerate(("X", "Y", "Z")):
-        values = [obs[axis] for obs in starts]
-        if any(abs(value - nominal[axis]) > 4.0 + OBS_TOL for value in values):
-            raise AssertionError(f"Randomized {label} is more than 4 m from nominal: {values}")
-        if max(values) - min(values) <= OBS_TOL:
-            raise AssertionError(f"Randomized {label} does not vary: {values}")
-    write("PASS: randomized X/Y/Z spawn within 4 m per axis, repeatable from the seed")
+    for axis, (label, limit) in enumerate((("X", 10.0), ("Y", 12.0), ("Z", 10.0))):
+        offsets = [obs[axis] - nominal[axis] for obs in starts]
+        if any(abs(offset) > limit + OBS_TOL for offset in offsets):
+            raise AssertionError(f"Randomized {label} exceeds ±{limit:g} m: {offsets}")
+        if min(offsets) >= -4.0 or max(offsets) <= 4.0:
+            raise AssertionError(f"Randomized {label} does not extend past ±4 m on both sides: {offsets}")
+    write("PASS: randomized spawn within ±10 m in X/Z and ±12 m in Y, repeatable from the seed")
 
 
 def verify_terminal(client: RocketLandingClient, max_steps: int, write: Callable[[str], None]) -> None:
@@ -123,12 +123,32 @@ def verify_terminal(client: RocketLandingClient, max_steps: int, write: Callable
     write("PASS: post-terminal step rejected; subsequent reset restores time, state and flags")
 
 
+def verify_timeout(client: RocketLandingClient, write: Callable[[str], None]) -> None:
+    limit_s = 20
+    obs, info = client.reset(seed=1234, random_start=False)
+    for _ in range(limit_s * HZ + 1):
+        # Hold altitude until the episode reaches the time limit.
+        desired_speed = max(-2.0, min(2.0, (40.0 - obs[1]) * 0.65))
+        acceleration = 1.62 + 1.5 * (desired_speed - obs[4])
+        throttle = max(0.0, min(1.0, info["mass_kg"] * acceleration / 3500.0))
+        obs, _, terminated, truncated, info = client.step([throttle, 0.0, 0.0])
+        if terminated or truncated:
+            if terminated or not truncated or info["result"] != "TIMEOUT":
+                raise AssertionError(f"Expected a truncated timeout, got {info['result']!r}")
+            if not limit_s <= info["elapsed_s"] <= limit_s + 1 / HZ + 1e-5:
+                raise AssertionError(f"Unexpected timeout time: {info['elapsed_s']}")
+            write(f"PASS: hovering episode truncated after {info['elapsed_s']:.2f} simulated seconds")
+            return
+    raise AssertionError("Episode did not time out within 20 seconds plus one physics tick")
+
+
 def live_check(port: int, idle_seconds: float, max_steps: int, write: Callable[[str], None]) -> None:
     write(f"Connected to Godot 127.0.0.1:{port}: testing F03 pause/ticks")
     with RocketLandingClient(port=port, timeout=15) as client:
         verify_pause(client, idle_seconds, write)
         verify_spawn(client, write)
         verify_terminal(client, max_steps, write)
+        verify_timeout(client, write)
     # Godot accepts only one socket at a time; give its process loop time to
     # observe a closed connection before attempting a fresh connection.
     time.sleep(0.2)

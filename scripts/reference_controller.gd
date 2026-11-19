@@ -19,7 +19,7 @@ func calculate_throttle(rocket: RocketPhysics, dt: float) -> float:
     if dt <= 0.0 or not is_finite(dt):
         return 0.0
     var altitude: float = maxf(0.0, rocket.collider_clearance_m())
-    var desired_velocity: float = -clampf(altitude * 0.12, 0.65, 5.0)
+    var desired_velocity: float = -minf(6.0, sqrt(1.1 * 1.1 + 2.0 * 0.6 * altitude))
     var error: float = desired_velocity - rocket.linear_velocity.y
     var derivative: float = (error - _previous_error) / dt if _have_previous else 0.0
     _previous_error = error
