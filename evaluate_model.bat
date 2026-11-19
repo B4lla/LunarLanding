@@ -6,7 +6,7 @@ if not exist ".venv\Scripts\python.exe" (
     pause
     exit /b 1
 )
-".venv\Scripts\python.exe" probar_modelo.py %*
+".venv\Scripts\python.exe" evaluate_model.py %*
 set "RESULT=%errorlevel%"
 echo.
 pause

@@ -1,4 +1,4 @@
-"""Evaluate the saved SAC policy in the Lunar Landing simulator."""
+"""Run and evaluate a saved SAC policy in the Lunar Landing simulator."""
 import argparse
 from math import hypot
 from pathlib import Path
