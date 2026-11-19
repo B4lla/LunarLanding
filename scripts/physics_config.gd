@@ -27,6 +27,7 @@ extends Resource
 @export_range(1.0, 1000.0, 1.0) var horizontal_world_limit_m: float = 80.0
 @export_range(1.0, 1000.0, 1.0) var maximum_altitude_m: float = 200.0
 @export_range(0.0, 20.0, 0.1) var spawn_spread_m: float = 4.0
+@export_range(0.0, 20.0, 0.1) var spawn_altitude_spread_m: float = 0.0
 
 
 func validate() -> bool:
@@ -50,4 +51,7 @@ func validate() -> bool:
         and safe_tilt_deg > 0.0 and safe_angular_speed_rad_s > 0.0 \
         and stable_contact_seconds > 0.0 and max_episode_seconds > 0.0 \
         and horizontal_world_limit_m > 0.0 and maximum_altitude_m > initial_center_altitude_m \
-        and spawn_spread_m >= 0.0 and is_finite(spawn_spread_m)
+        and spawn_spread_m >= 0.0 and is_finite(spawn_spread_m) \
+        and spawn_altitude_spread_m >= 0.0 and is_finite(spawn_altitude_spread_m) \
+        and initial_center_altitude_m - spawn_altitude_spread_m > rocket_half_height_m \
+        and initial_center_altitude_m + spawn_altitude_spread_m < maximum_altitude_m

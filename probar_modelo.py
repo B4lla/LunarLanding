@@ -1,5 +1,6 @@
 """Evaluate the saved SAC policy in the Lunar Landing simulator."""
 import argparse
+from math import hypot
 from pathlib import Path
 
 from stable_baselines3 import SAC
@@ -37,6 +38,9 @@ def main():
     try:
         for episode in range(1, args.episodios + 1):
             obs, _ = env.reset(seed=args.semilla if episode == 1 else None)
+            x, y, z = obs[:3]
+            print(f"Intento {episode} | Inicio respecto a la plataforma: "
+                  f"X={x:+.2f} m, Y={y:.2f} m, Z={z:+.2f} m", flush=True)
             total = 0.0
             while True:
                 action, _ = model.predict(obs, deterministic=True)
@@ -44,9 +48,11 @@ def main():
                 total += reward
                 if terminated or truncated:
                     result = info.get("result", "UNKNOWN")
-                    successes += result == "SUCCESSFUL LANDING"
+                    landed = result == "SUCCESSFUL LANDING"
+                    successes += landed
+                    distance = f", distancia al centro: {hypot(obs[0], obs[2]):.2f} m" if landed else ""
                     print(f"Intento {episode}: {result} ({info.get('reason', '')}); "
-                          f"recompensa: {total:.1f}", flush=True)
+                          f"recompensa: {total:.1f}{distance}", flush=True)
                     break
         print(f"Aterrizajes correctos: {successes}/{args.episodios}", flush=True)
     finally:

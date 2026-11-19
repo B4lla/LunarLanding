@@ -23,16 +23,16 @@ The reward combines a small cost on every step with penalties for horizontal dis
 
 | Outcome | Additional reward |
 | --- | ---: |
-| Successful landing | `+100` |
+| Successful landing | `+100`, plus up to `+20` for landing near the center |
 | Crash | `-100` |
 | Out of bounds | `-50` |
 | Time limit | `-20` |
 
-The weights are defined in `config/reward.tres` and applied in `scripts/rl_bridge.gd`. Each action advances one 60 Hz physics tick.
+The weights are defined in `config/reward.tres` and applied in `scripts/rl_bridge.gd`. The accuracy bonus decreases linearly from 20 points at the center to zero at 6 m, using the horizontal distance once the landing is stable. Each action advances one 60 Hz physics tick.
 
-Each run starts with landing demonstrations recorded in Godot. The neural network first learns to imitate their throttle and steering actions. SAC then collects experience from randomized starts and trains on the replay buffer. An imitation loss keeps the actor close to demonstrated corrections while it learns from its own flights. The saved network takes the same 15 observations and produces the same three actions when used with `SAC.load()` and `predict()`.
+Each run starts with landing demonstrations recorded in Godot. The neural network first learns to imitate their throttle and steering actions. SAC then collects experience from randomized starts and trains on the replay buffer. Randomized starts vary X and Z by up to 4 m and place the rocket's center 46–54 m above the pad. An imitation loss keeps the actor close to demonstrated corrections while it learns from its own flights. The saved network takes the same 15 observations and produces the same three actions when used with `SAC.load()` and `predict()`.
 
-The trainer evaluates the initial network, every 5,000 SAC steps, and at the end of the run. Each evaluation uses deterministic actions on one nominal start and four fixed randomized starts. It saves the checkpoint with the most successful landings, using mean reward to break ties.
+The trainer evaluates the initial network, every 5,000 SAC steps, and at the end of the run. Each evaluation uses deterministic actions on one nominal start and twelve fixed randomized starts. It saves the checkpoint with the most successful landings, using smaller mean landing distance and then higher mean reward to break ties.
 
 ## Requirements
 
@@ -69,6 +69,8 @@ Pass arguments to the launcher from Command Prompt or PowerShell:
 - `--port`: local Godot port, defaulting to `55423`. Use another port if it is occupied.
 
 Headless training runs without wall-clock synchronization. Godot still advances one physics tick per action. The default model path is `python/user_algorithms/sac_rocket.zip`. A later run using the same path replaces the previous model. Generated models are excluded from Git.
+
+To watch the saved model start from different positions, run `probar_modelo.bat --aleatorio`. The evaluator prints the starting X/Y/Z coordinates and the distance from the pad center for each successful landing.
 
 ### Manual installation
 

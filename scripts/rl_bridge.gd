@@ -323,13 +323,15 @@ func _info() -> Dictionary:
 func _reward() -> float:
     var v: Vector3 = rocket.linear_velocity
     var p: Vector3 = rocket.global_position
+    var distance_m: float = Vector2(p.x, p.z).length()
     var result: float = REWARD.living_cost \
-        - REWARD.horizontal_distance_cost * Vector2(p.x, p.z).length() \
+        - REWARD.horizontal_distance_cost * distance_m \
         - REWARD.horizontal_speed_cost * Vector2(v.x, v.z).length() \
         - REWARD.vertical_speed_cost * absf(v.y) \
         - REWARD.tilt_cost * rocket.tilt_degrees()
     match episode.result:
-        EpisodeController.Result.LANDED: result += REWARD.landing_bonus
+        EpisodeController.Result.LANDED:
+            result += REWARD.landing_bonus + REWARD.center_bonus(distance_m)
         EpisodeController.Result.CRASH: result += REWARD.crash_penalty
         EpisodeController.Result.OUT_OF_BOUNDS: result += REWARD.bounds_penalty
         EpisodeController.Result.TIMEOUT: result += REWARD.timeout_penalty

@@ -79,6 +79,21 @@ def verify_pause(client: RocketLandingClient, idle_seconds: float, write: Callab
           f"no state/fuel drift after {idle_seconds:.2f} s pauses (before/between steps)")
 
 
+def verify_spawn(client: RocketLandingClient, write: Callable[[str], None]) -> None:
+    nominal, _ = client.reset(seed=101, random_start=False)
+    _near(nominal[:3], [0.0, 50.0, 0.0], "Nominal spawn")
+    starts = [client.reset(seed=seed, random_start=True)[0] for seed in (101, 102, 103, 104)]
+    repeated, _ = client.reset(seed=101, random_start=True)
+    _near(starts[0], repeated, "Repeated seed")
+    for axis, label in enumerate(("X", "Y", "Z")):
+        values = [obs[axis] for obs in starts]
+        if any(abs(value - nominal[axis]) > 4.0 + OBS_TOL for value in values):
+            raise AssertionError(f"Randomized {label} is more than 4 m from nominal: {values}")
+        if max(values) - min(values) <= OBS_TOL:
+            raise AssertionError(f"Randomized {label} does not vary: {values}")
+    write("PASS: randomized X/Y/Z spawn within 4 m per axis, repeatable from the seed")
+
+
 def verify_terminal(client: RocketLandingClient, max_steps: int, write: Callable[[str], None]) -> None:
     client.reset(seed=1234, random_start=False)
     for iteration in range(1, max_steps+1):
@@ -112,6 +127,7 @@ def live_check(port: int, idle_seconds: float, max_steps: int, write: Callable[[
     write(f"Connected to Godot 127.0.0.1:{port}: testing F03 pause/ticks")
     with RocketLandingClient(port=port, timeout=15) as client:
         verify_pause(client, idle_seconds, write)
+        verify_spawn(client, write)
         verify_terminal(client, max_steps, write)
     # Godot accepts only one socket at a time; give its process loop time to
     # observe a closed connection before attempting a fresh connection.

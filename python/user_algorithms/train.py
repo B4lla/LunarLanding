@@ -1,5 +1,6 @@
 """Train SAC: use --help to view available options."""
 import argparse
+from math import hypot
 import os
 from pathlib import Path
 import shutil
@@ -80,10 +81,11 @@ def parse_args(argv=None):
 
 
 def evaluate(model, env, landed_result):
-    landings = 0
+    landing_distances = []
     returns = []
     # Compare every checkpoint on identical starts outside the demo seeds.
-    for seed, random_start in [(0, False), (101, True), (102, True), (103, True), (104, True)]:
+    starts = [(0, False), *((seed, True) for seed in range(101, 113))]
+    for seed, random_start in starts:
         obs, _ = env.reset(seed=seed, options={"random_start": random_start})
         total = 0.0
         while True:
@@ -91,13 +93,20 @@ def evaluate(model, env, landed_result):
             obs, reward, terminated, truncated, info = env.step(action)
             total += reward
             if terminated or truncated:
-                landings += info["result"] == landed_result
+                if info["result"] == landed_result:
+                    landing_distances.append(hypot(obs[0], obs[2]))
                 returns.append(total)
                 break
     mean_return = sum(returns) / len(returns)
+    landings = len(landing_distances)
+    mean_distance = sum(landing_distances) / landings if landings else float("inf")
+    distance_summary = ""
+    if landings:
+        distance_summary = f", mean distance from pad center {mean_distance:.2f} m"
     print(f"Evaluation at {model.num_timesteps:,} SAC steps: "
-          f"{landings}/{len(returns)} landings, mean return {mean_return:.2f}", flush=True)
-    return landings, mean_return
+          f"{landings}/{len(returns)} landings, mean return {mean_return:.2f}{distance_summary}",
+          flush=True)
+    return landings, -mean_distance, mean_return
 
 
 def train_and_save(model, env, args, demonstrations):

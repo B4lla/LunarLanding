@@ -27,3 +27,4 @@ max_episode_seconds = 120.0
 horizontal_world_limit_m = 80.0
 maximum_altitude_m = 200.0
 spawn_spread_m = 4.0
+spawn_altitude_spread_m = 4.0

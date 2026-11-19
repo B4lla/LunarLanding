@@ -126,6 +126,7 @@ func reset_episode(seed_value: int = 12345, random_start: bool = false) -> void:
     episode_seed = seed_value
     _rng.seed = seed_value
     var offset_x: float = 0.0
+    var offset_y: float = 0.0
     var offset_z: float = 0.0
     var vel_x: float = 0.0
     var vel_z: float = 0.0
@@ -139,8 +140,9 @@ func reset_episode(seed_value: int = 12345, random_start: bool = false) -> void:
         basis = Basis.from_euler(Vector3(_rng.randf_range(-0.05, 0.05),
             _rng.randf_range(-0.1, 0.1), _rng.randf_range(-0.05, 0.05)))
         omega = Vector3(_rng.randf_range(-0.04, 0.04), 0.0, _rng.randf_range(-0.04, 0.04))
+        offset_y = _rng.randf_range(-CONFIG.spawn_altitude_spread_m, CONFIG.spawn_altitude_spread_m)
     reset_with_state(Transform3D(basis, Vector3(offset_x,
-        CONFIG.platform_top_y_m + CONFIG.initial_center_altitude_m, offset_z)),
+        CONFIG.platform_top_y_m + CONFIG.initial_center_altitude_m + offset_y, offset_z)),
         Vector3(vel_x, CONFIG.initial_vertical_velocity_m_s, vel_z), omega)
 
 
